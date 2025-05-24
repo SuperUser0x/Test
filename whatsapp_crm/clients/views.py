@@ -7,7 +7,7 @@ from django.views.generic import (
 from django.views import View
 from django.contrib import messages
 from .models import Client
-from .forms import WhatsAppMessageForm
+from .forms import WhatsAppMessageForm, ClientForm
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
@@ -68,8 +68,8 @@ class SendWhatsAppMessageView(LoginRequiredMixin, View):
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
+    form_class = ClientForm # Use ClientForm
     template_name = 'clients/client_form.html'
-    fields = ['name', 'phone_number', 'email', 'status', 'notes']
     success_url = reverse_lazy('clients:client_list')
 
     def form_valid(self, form):
@@ -78,8 +78,8 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
+    form_class = ClientForm # Use ClientForm
     template_name = 'clients/client_form.html'
-    fields = ['name', 'phone_number', 'email', 'status', 'notes']
     success_url = reverse_lazy('clients:client_list')
 
     def get_queryset(self):

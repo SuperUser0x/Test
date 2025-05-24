@@ -3,39 +3,63 @@
 {% block title %}Client: {{ client.name }}{% endblock %}
 
 {% block content %}
-<h2>{{ client.name }}</h2>
-<p><strong>Phone:</strong> {{ client.phone_number }}</p>
-<p><strong>Email:</strong> {{ client.email|default:"N/A" }}</p>
-<p><strong>Status:</strong> {{ client.status }}</p>
-<p><strong>Notes:</strong></p>
-<p>{{ client.notes|linebreaksbr|default:"No notes." }}</p>
-<p><em>Added on: {{ client.created_at }}</em></p>
-<p><em>Last updated: {{ client.updated_at }}</em></p>
-
-<div class="mt-3">
-    <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-secondary btn-sm">Edit Client</a>
-    <a href="{% url 'clients:client_delete' client.pk %}" class="btn btn-danger btn-sm">Delete Client</a>
-</div>
-<hr>
-
-<div class="mt-4">
-    <h3>Send WhatsApp Message</h3>
-    <form method="post" action="{% url 'clients:send_whatsapp_message' client.pk %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ whatsapp_form.message.label_tag }}
-            {{ whatsapp_form.message }}
-            {% if whatsapp_form.message.errors %}
-                <div class="invalid-feedback d-block">
-                    {% for error in whatsapp_form.message.errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
+<div class="card my-4 shadow-sm">
+    <div class="card-header bg-light">
+        <h2 class="mb-0">{{ client.name }}</h2>
+    </div>
+    <div class="card-body p-4">
+        <p class="mb-3"><strong>Phone:</strong> {{ client.phone_number }}</p>
+        <p class="mb-3"><strong>Email:</strong> {{ client.email|default:"N/A" }}</p>
+        <p class="mb-3"><strong>Status:</strong> <span class="badge bg-info">{{ client.status }}</span></p>
+        <p class="mb-1"><strong>Notes:</strong></p>
+        <div class="notes-content p-3 bg-light rounded mb-3">
+            {{ client.notes|linebreaksbr|default:"No notes." }}
         </div>
-        <button type="submit" class="btn btn-success">Send Message (Simulated)</button>
-    </form>
+        <p class="mb-1 text-muted small"><em>Added on: {{ client.created_at|date:"Y-m-d H:i" }}</em></p>
+        <p class="text-muted small"><em>Last updated: {{ client.updated_at|date:"Y-m-d H:i" }}</em></p>
+
+        <div class="mt-4">
+            <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-secondary me-2"><i class="bi bi-pencil-fill me-1"></i>Edit Client</a>
+            <a href="{% url 'clients:client_delete' client.pk %}" class="btn btn-danger"><i class="bi bi-trash-fill me-1"></i>Delete Client</a>
+        </div>
+    </div>
 </div>
-<hr>
-<a href="{% url 'clients:client_list' %}" class="btn btn-outline-primary mt-3">Back to Client List</a>
+
+
+<div class="card my-4 shadow-sm">
+    <div class="card-header bg-light">
+        <h3 class="mb-0">Send WhatsApp Message</h3>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" action="{% url 'clients:send_whatsapp_message' client.pk %}">
+            {% csrf_token %}
+
+            {% if whatsapp_form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for error in whatsapp_form.non_field_errors %}
+                  <p class="mb-0">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label for="{{ whatsapp_form.message.id_for_label }}" class="form-label">{{ whatsapp_form.message.label }}</label>
+                {{ whatsapp_form.message }} {# Widget has 'form-control' class from forms.py #}
+                {% if whatsapp_form.message.help_text %}
+                  <div id="{{ whatsapp_form.message.id_for_label }}_help" class="form-text">{{ whatsapp_form.message.help_text }}</div>
+                {% endif %}
+                {% for error in whatsapp_form.message.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill me-1"></i>Send Message (Simulated)</button>
+        </form>
+    </div>
+</div>
+
+<div class="my-4">
+    <a href="{% url 'clients:client_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left-circle me-1"></i>Back to Client List</a>
+</div>
 {% endblock %}
