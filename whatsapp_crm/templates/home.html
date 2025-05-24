@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Home - WhatsApp CRM{% endblock %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Welcome, {{ user.username }}!</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">You have successfully logged into the WhatsApp CRM.</p>
+        <p class="lead mb-4">What would you like to do next?</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'clients:client_list' %}" class="btn btn-primary btn-lg px-4 gap-3">View My Clients</a>
+            <a href="{% url 'clients:client_add' %}" class="btn btn-outline-secondary btn-lg px-4">Add New Client</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

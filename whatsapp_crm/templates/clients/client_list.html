@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}My Clients{% endblock %}
+
+{% block content %}
+<h2>My Clients</h2>
+<a href="{% url 'clients:client_add' %}">Add New Client</a>
+{% if clients %}
+    <ul>
+        {% for client in clients %}
+            <li>
+                <a href="{% url 'clients:client_detail' client.pk %}">{{ client.name }}</a>
+                ({{ client.status }})
+                - <a href="{% url 'clients:client_edit' client.pk %}">Edit</a>
+                - <a href="{% url 'clients:client_delete' client.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You don't have any clients yet.</p>
+{% endif %}
+{% endblock %}
